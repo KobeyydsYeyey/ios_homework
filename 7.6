@@ -17,4 +17,167 @@ UICollectionView
 UIWebView
 WKWebView
 
-3.列举出三个 UITableViewDelegate 声明的方法
+3.列举出三个 UITableViewDelegate 声明的方法(这个问题不太会，就上网查了查定义)
+UITableViewDelegate
+它用于表现cell的显示和行为,我们查看它的定义:
+
+public protocol UITableViewDelegate : NSObjectProtocol, UIScrollViewDelegate {
+
+    // 自定义显示
+    // cell将要显示时回调
+    @available(iOS 2.0, *)
+    optional public func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) 
+    // section的header将要显示时回调
+    @available(iOS 6.0, *)
+    optional public func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int)
+    // section的footer将要显示时回调
+    @available(iOS 6.0, *) 
+    optional public func tableView(tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int)
+    // cell已显示时回调
+    @available(iOS 6.0, *)
+    optional public func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath)
+    // section的header已显示时回调
+    @available(iOS 6.0, *)
+    optional public func tableView(tableView: UITableView, didEndDisplayingHeaderView view: UIView, forSection section: Int)
+    // section的footer已显示时回调
+    @available(iOS 6.0, *)
+    optional public func tableView(tableView: UITableView, didEndDisplayingFooterView view: UIView, forSection section: Int)
+
+    // 可变高度的支持
+
+    // 返回行高
+    @available(iOS 2.0, *)
+    optional public func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
+    // 返回section的header的高度
+    @available(iOS 2.0, *)
+    optional public func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat
+    // 返回section的footer的高度
+    @available(iOS 2.0, *)
+    optional public func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat
+
+
+    // 使用estimatedHeight方法可以快速计算猜测值,可加快table的加载时间
+    // 如果下面的这些estimatedHeight方法被实现, 上面的tableView:heightForXXX的调用将被推迟到views可以被展示的时候,所以这里可以放一些相对耗资源的逻辑
+
+    // 返回预估的行高
+    @available(iOS 7.0, *)
+    optional public func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
+    // 返回预估 section的header 高度
+    @available(iOS 7.0, *)
+    optional public func tableView(tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat
+    @available(iOS 7.0, *)
+    // 返回预估 section的footer 高度
+    optional public func tableView(tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat
+
+    // Section的header和footer信息
+
+    // 返回自定义的 section的header, 它将调整默认或已经指定的header的高度
+    @available(iOS 2.0, *)
+    optional public func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? 
+    // 返回自定义的 section的footer, 它将调整默认或已经指定的footer的高度
+    @available(iOS 2.0, *)
+    optional public func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? 
+
+    // 行右侧的图标被点击的时候的回调 
+    @available(iOS 2.0, *)
+    optional public func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath)
+
+    // Selection
+
+    // -tableView:shouldHighlightRowAtIndexPath: 这个方法将被调用当有行被按下的时候
+    // 返回false,消息将停止发送而导致当前行在按下的时候不是失去选中时的高亮
+
+    // 将要高亮的时候调用
+    @available(iOS 6.0, *)
+    optional public func tableView(tableView: UITableView, shouldHighlightRowAtIndexPath indexPath: NSIndexPath) -> Bool
+    // 已经高亮的时候调用
+    @available(iOS 6.0, *)
+    optional public func tableView(tableView: UITableView, didHighlightRowAtIndexPath indexPath: NSIndexPath)
+    // 已经不高亮的时候调用
+    @available(iOS 6.0, *)
+    optional public func tableView(tableView: UITableView, didUnhighlightRowAtIndexPath indexPath: NSIndexPath)
+
+    // 在用户改变选中前调用, 返回一个新的indexPath或nil
+    // 将要选中行
+    @available(iOS 2.0, *)
+    optional public func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath?
+    // 将要取消选中行
+    @available(iOS 3.0, *)
+    optional public func tableView(tableView: UITableView, willDeselectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath?
+    // 改变选中后调用.
+    // 选中后调用
+    @available(iOS 2.0, *)
+    optional public func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
+    // 已经取消选中后调用
+    @available(iOS 3.0, *)
+    optional public func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath)
+
+    // 编辑模式
+
+    // 允许给indexPath的cell自定义editingStyle, 如果没有实现下面的方法,那么当editing属性设置为true时,所有的可编辑cell都有UITableViewCellEditingStyleDelete风格
+
+    // 指定cell的编辑风格
+    @available(iOS 2.0, *)
+    optional public func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle
+    // 删除时弹出的确认按钮的文字
+    @available(iOS 3.0, *)
+    optional public func tableView(tableView: UITableView, titleForDeleteConfirmationButtonForRowAtIndexPath indexPath: NSIndexPath) -> String?
+
+    // 如果返回值为非nil,将取代tableView:titleForDeleteConfirmationButtonForRowAtIndexPath:
+    @available(iOS 8.0, *)
+    optional public func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? 
+
+    // 控制在编辑模式下背景是否缩进. 如果没有实现, 默认是true,它和下面的缩进级别无关, 这个方法只能用于grouped风格的tableView
+    @available(iOS 2.0, *)
+    optional public func tableView(tableView: UITableView, shouldIndentWhileEditingRowAtIndexPath indexPath: NSIndexPath) -> Bool
+
+
+    // 当insert/delete/move按钮将要显示的时候回调
+    @available(iOS 2.0, *)
+    optional public func tableView(tableView: UITableView, willBeginEditingRowAtIndexPath indexPath: NSIndexPath)
+    // 编辑完成后回调
+    @available(iOS 2.0, *)
+    optional public func tableView(tableView: UITableView, didEndEditingRowAtIndexPath indexPath: NSIndexPath)
+
+    // 移动和重新排序
+
+    // 允许指定行移动到目标行
+    @available(iOS 2.0, *)
+    optional public func tableView(tableView: UITableView, targetIndexPathForMoveFromRowAtIndexPath sourceIndexPath: NSIndexPath, toProposedIndexPath proposedDestinationIndexPath: NSIndexPath) -> NSIndexPath
+
+
+    // Indentation(压痕)
+
+    // 返回压痕个深度等级
+    @available(iOS 2.0, *)
+    optional public func tableView(tableView: UITableView, indentationLevelForRowAtIndexPath indexPath: NSIndexPath) -> Int 
+
+
+    // 使用复制/粘贴功能, 下面的三个方法必须都实现
+
+    // 是否将要显示系统菜单(用于复制/粘贴)
+    @available(iOS 5.0, *)
+    optional public func tableView(tableView: UITableView, shouldShowMenuForRowAtIndexPath indexPath: NSIndexPath) -> Bool
+    // 是否确认显示系统菜单
+    @available(iOS 5.0, *)
+    optional public func tableView(tableView: UITableView, canPerformAction action: Selector, forRowAtIndexPath indexPath: NSIndexPath, withSender sender: AnyObject?) -> Bool
+    // 当用户选择菜单中的某个选项时调用
+    @available(iOS 5.0, *)
+    optional public func tableView(tableView: UITableView, performAction action: Selector, forRowAtIndexPath indexPath: NSIndexPath, withSender sender: AnyObject?)
+
+    // 获得焦点
+
+    // 返回能否获得焦点
+    @available(iOS 9.0, *)
+    optional public func tableView(tableView: UITableView, canFocusRowAtIndexPath indexPath: NSIndexPath) -> Bool
+    // 返回是否将要更新焦点
+    @available(iOS 9.0, *)
+    optional public func tableView(tableView: UITableView, shouldUpdateFocusInContext context: UITableViewFocusUpdateContext) -> Bool
+    // 已经更新焦点时调用
+    @available(iOS 9.0, *)
+    optional public func tableView(tableView: UITableView, didUpdateFocusInContext context: UITableViewFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator)
+    // 返回上一个焦点的indexPath
+    @available(iOS 9.0, *)
+    optional public func indexPathForPreferredFocusedViewInTableView(tableView: UITableView) -> NSIndexPath?
+}
+
